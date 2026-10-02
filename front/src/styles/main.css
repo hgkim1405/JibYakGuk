@@ -1,0 +1,135 @@
+@import './tokens.css';
+@import './base.css';
+
+#app {
+  min-height: 100vh;
+}
+
+.app-shell {
+  min-height: 100vh;
+}
+
+.site-header {
+  display: flex;
+  min-height: 4.5rem;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--page-gutter);
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-surface);
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  color: var(--color-brand-dark);
+  font-size: 1.15rem;
+  font-weight: 800;
+}
+
+.brand-mark {
+  display: grid;
+  width: 2rem;
+  height: 2rem;
+  place-items: center;
+  border-radius: 0.75rem;
+  background: var(--color-brand);
+  color: white;
+  font-size: 0.95rem;
+}
+
+.desktop-nav {
+  display: none;
+  gap: 1.5rem;
+  color: var(--color-muted);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.desktop-nav a.router-link-active,
+.mobile-nav a.router-link-active {
+  color: var(--color-brand-dark);
+}
+
+.page-content {
+  width: min(100%, var(--content-width));
+  min-height: calc(100vh - 8rem);
+  margin: 0 auto;
+  padding: 2.5rem var(--page-gutter) 6rem;
+}
+
+.mobile-nav {
+  position: fixed;
+  z-index: 2;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  padding: 0.75rem 0.25rem calc(0.75rem + env(safe-area-inset-bottom));
+  border-top: 1px solid var(--color-border);
+  background: rgb(255 255 255 / 94%);
+  text-align: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.page-intro {
+  max-width: 42rem;
+  margin-bottom: 2rem;
+}
+
+.eyebrow {
+  margin: 0 0 0.65rem;
+  color: var(--color-brand);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.page-title {
+  margin: 0;
+  font-size: clamp(1.8rem, 7vw, 2.6rem);
+  letter-spacing: -0.04em;
+}
+
+.page-description {
+  margin: 0.9rem 0 0;
+  color: var(--color-muted);
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+.status-card {
+  padding: 1.25rem;
+  border: 1px solid var(--color-border);
+  border-radius: 1rem;
+  background: var(--color-surface);
+}
+
+.status-card p {
+  margin: 0;
+  color: var(--color-muted);
+  line-height: 1.7;
+}
+
+@media (min-width: 720px) {
+  :root {
+    --page-gutter: 2rem;
+  }
+
+  .desktop-nav {
+    display: flex;
+  }
+
+  .page-content {
+    min-height: calc(100vh - 4.5rem);
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+  }
+
+  .mobile-nav {
+    display: none;
+  }
+}

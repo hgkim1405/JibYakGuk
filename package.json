@@ -1,0 +1,13 @@
+{
+  "name": "jibyakguk",
+  "version": "0.1.0",
+  "private": true,
+  "description": "집약국 project workspace",
+  "scripts": {
+    "dev:front": "npm --prefix front run dev",
+    "dev:node": "npm --prefix back/node run start:dev"
+  },
+  "engines": {
+    "node": "22.14.x"
+  }
+}

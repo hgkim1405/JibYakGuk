@@ -1,0 +1,16 @@
+:root {
+  color-scheme: light;
+  font-family: Inter, Pretendard, "Noto Sans KR", system-ui, sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  --color-ink: #23352d;
+  --color-muted: #718078;
+  --color-brand: #287253;
+  --color-brand-dark: #1e5d43;
+  --color-brand-soft: #e8f2ec;
+  --color-paper: #f5f8f6;
+  --color-surface: #ffffff;
+  --color-border: #dce6df;
+  --content-width: 72rem;
+  --page-gutter: 1.25rem;
+}
