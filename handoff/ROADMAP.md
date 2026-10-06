@@ -64,7 +64,7 @@ NestJS는 브라우저 REST API, 공식 API, Firestore, safety 처리와 Python 
 - [ ] DUR API 승인, 최신 operation, 실제 요청/응답, coverage 확인
 - [x] 안전상비의약품 API 실제 13행 요청/응답과 식별자 필드 부재 확인
 - [x] 낱알식별 API 25,437 rows/51 pages full raw response; exact `ITEM_SEQ` match 2,751/4,740 unique e약은요 IDs 확인
-- [ ] HIRA API: 공급된 HWP guide, XML example을 대조하고 단건 요청했으나 locally fetched sample filters 모두 totalCount=0. 원문 XML parser·user-sample parse 및 MFDS `ITEM_INGR_NAME` exact-literal feasibility check는 구현했으나 비교 일치 0. 이는 `gnlNmCd` bridge를 만들지 않으며, non-empty API response 및 별도 HIRA drug-price API operation contract 확인은 미완료
+- [ ] HIRA API: HWP는 네 검색조건 중 최소 하나를 요구함. 조건을 넣은 local 단건 요청은 totalCount=0; 이전 no-filter 0건 결과는 HWP 조건을 만족하지 않아 데이터 비어 있음의 증거에서 제외. 원문 XML parser·user-sample parse 및 MFDS `ITEM_INGR_NAME` exact-literal feasibility check는 구현했으나 비교 일치 0. 이는 `gnlNmCd` bridge를 만들지 않으며, non-empty API response 및 별도 HIRA drug-price API operation contract 확인은 미완료
 - [x] e약은요/product permit/pill/safe OTC identifier crosswalk, duplicate/missing counts 및 exact JOIN율 report 생성; safe-OTC의 identifier 부재와 HIRA empty-response 한계를 기록
 - 완료 기준: 실제 source response와 identifier 의미가 확인되고, JOIN 결과 및 미연결 이유를 정량화
 - 게이트: 제품명 fuzzy matching으로 JOIN 성공률을 부풀리지 않습니다. 문서의 field명과 실제 응답이 다르면 차이를 기록합니다.

@@ -77,6 +77,15 @@ export async function requestPhase3Page(
   queryParameters: Phase3QueryParameters = {},
 ): Promise<Phase3HttpResponse> {
   const source = PHASE3_SOURCE_CONFIG[sourceId];
+  if (
+    sourceId === "hira-ingredient-effect" &&
+    !Object.entries(queryParameters).some(
+      ([name, value]) => ALLOWED_QUERY_PARAMETERS[sourceId].has(name) && value.trim().length > 0,
+    )
+  ) {
+    throw new Error("HIRA requests require at least one non-empty filter: gnlNmCd, gnlNm, meftDivNo, or divNm.");
+  }
+
   const { queryValue: serviceKey, secretValues } = getServiceKey();
   const url = new URL(source.endpoint);
   url.searchParams.set(source.apiKeyParameter, serviceKey);

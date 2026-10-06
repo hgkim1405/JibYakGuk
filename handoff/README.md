@@ -8,6 +8,7 @@
 - [Phase 4 Drug Master v1 산출 기록](../back/data-poc/sources/PHASE4-DRUG-MASTER-2026-10-06.md)
 - [Phase 5 1,000개 표본 검증 기록](../back/data-poc/sources/PHASE5-SAMPLE-VALIDATION-2026-10-06.md)
 - [Phase 6 효능 원문 검토 준비](../back/data-poc/sources/PHASE6-EFFICACY-EVIDENCE-2026-10-06.md)
+- [사용자 제공 API 통합 명세 v2](../docs/JIBYAKGUK_API_SPEC_FOR_CODEX_v2.md)
 - [버전관리 raw snapshot 및 출처/이용 조건](../back/data/raw/README.md)
 - [e약은요 제공기관 미확인 질문 초안](OPEN-PROVIDER-QUESTIONS.md)
 

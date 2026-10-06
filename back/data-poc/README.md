@@ -6,6 +6,8 @@ Phase 3 API별 확인된 공식 source 메타데이터와 미확인 사항은 [s
 
 ## Phase 3 raw-only 요청 준비
 
+추가 HIRA HWP 제약: `gnlNmCd`, `gnlNm`, `meftDivNo`, `divNm` 중 비어 있지 않은 검색 조건을 최소 하나 포함해야 합니다. 초당 최대 30건, 메시지 최대 6,000 bytes도 안내되어 있으며 HIRA PoC는 현재 단건 요청만 보냅니다. 무필터 probe는 오류/무데이터 판정에 사용하지 않습니다.
+
 [`sources/phase3/phase3.raw.collector.ts`](sources/phase3/phase3.raw.collector.ts)는 검증된 URL이 있는 4개 source에 대해 첫 페이지 한 번을 요청하고, HTTP status와 무변형 response body를 key 없는 metadata와 함께 저장합니다. 응답 schema를 파싱하거나 pagination을 자동 실행하지 않습니다. DUR은 공식 base URL을 확인하지 못해 허용 목록에 포함하지 않았습니다.
 
 실제 단건 응답을 확인한 뒤 JSON source용 전체 페이지 수집도 추가했습니다. 수집기는 `header/body/items` pagination 응답과 페이지별 `totalCount`를 확인하고, API 오류나 예상 밖 응답은 받은 raw page를 남긴 뒤 중단합니다. product-permit과 pill-identification에서 `numOfRows=1000`은 API `resultCode=11`과 최대 500이라는 오류를 반환했고, 500행 요청은 실제 성공했습니다.
@@ -16,7 +18,7 @@ Phase 3 API별 확인된 공식 source 메타데이터와 미확인 사항은 [s
 node --env-file=.env -r ts-node/register ../data-poc/sources/phase3/phase3.raw.collector.ts product-permit 10 1
 node --env-file=.env -r ts-node/register ../data-poc/sources/phase3/phase3.raw.collector.ts safe-otc 10 1
 node --env-file=.env -r ts-node/register ../data-poc/sources/phase3/phase3.raw.collector.ts pill-identification 10 1
-node --env-file=.env -r ts-node/register ../data-poc/sources/phase3/phase3.raw.collector.ts hira-ingredient-effect 10 1
+node --env-file=.env -r ts-node/register ../data-poc/sources/phase3/phase3.raw.collector.ts hira-ingredient-effect 10 1 gnlNmCd=100101AGN
 ```
 
 단건 명령 인자는 `<source> <numOfRows> <pageNo> [name=value ...]` 순입니다. source별로 승인된 필터만 받습니다. HIRA 필터는 HWP 가이드에 있는 `gnlNmCd`, `gnlNm`, `meftDivNo`, `divNm`입니다. metadata에는 필터 값 대신 parameter 이름만 기록합니다. 결과는 `back/data/raw/phase3/<source>/probe-<timestamp>/`에 저장됩니다.

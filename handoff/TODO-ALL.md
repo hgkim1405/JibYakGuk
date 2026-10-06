@@ -59,8 +59,9 @@
 - [ ] DUR service key의 활용신청·승인 상태와 quota 확인. 사용자가 제공한 승인 화면 또는 계정의 API 활용현황 근거가 필요
 - [x] 안전상비의약품 API: 실제 요청·13행 raw response 확보; 문서와 실제 필드 대조. `itemSeq`가 없어 exact identifier bridge 없음으로 기록
 - [x] 낱알식별 API: 전체 raw response/schema/coverage 확보; `ITEM_SEQ` exact ID 기준 e약은요 2,751/4,740 unique matches 확인
-- [ ] HIRA 의약품성분약효정보 API: 사용자 제공 XML은 별도 보존. 로컬 요청은 문서 샘플 필터 포함 모두 0 rows라 실제 non-empty response와 일반명 코드 관계는 미확정. 공식 catalog가 HIRA 약가목록 operation을 `gnlNmCd` source로 지목하지만 그 operation의 요청 계약을 더 확인해야 함
+- [ ] HIRA 의약품성분약효정보 API: 사용자 제공 XML은 별도 보존. 최소 1개 공식 HWP filter를 넣은 로컬 요청도 모두 0 rows라 실제 non-empty response와 일반명 코드 관계는 미확정. 공식 catalog가 HIRA 약가목록 operation을 `gnlNmCd` source로 지목하지만 그 operation의 요청 계약을 더 확인해야 함
 - [x] HIRA XML parser로 실제 저장된 local zero-row 응답 5개와 출처가 표시된 user-provided one-row XML을 파싱; item tag names와 provenance를 그대로 보존. 이는 live non-empty HIRA response 검증을 대체하지 않음
+- [x] 사용자 제공 HIRA HWP v1.1의 “4개 검색조건 중 최소 1개” 사용 제약을 반영해 Phase 3 client가 무필터 HIRA 요청을 API 호출 전에 거부하고 README 예시도 필터 포함으로 수정. 기존 무필터 zero-row raw는 진단 자료로 보존하되 dataset empty의 증거로 쓰지 않음
 - [x] 사용자 제공 HIRA 샘플의 `gnlNmCd`/`gnlNm`을 기존 MFDS product-permit 42,709행의 `ITEM_INGR_NAME`과 exact literal로 비교: 비어 있지 않은 42,631행에서 일반명·코드 일치 0. 재현기는 추가했지만 이 결과는 identifier mapping이 아니며 이름 정규화/fuzzy join도 수행하지 않음
 - [ ] DUR API는 승인 화면/공식 Swagger에서 확인된 base URL·operation으로 단건 raw response를 확보하고, 실제 구조와 coverage를 분석
 - [x] product-permit, safe-OTC, pill-identification의 실제 response fields/pagination/operation 동작을 raw response와 대조. HIRA field-name variants는 guide·user sample에 각각 있으나 local live 응답에서 검증되지 않음
