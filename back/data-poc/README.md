@@ -54,16 +54,17 @@ node -r ts-node/register ../data-poc/sources/phase4/drug-master.ts `
   ..\data\raw\easy-drug\snapshot-2026-10-06T05-52-37.917Z `
   ..\data\raw\phase3\product-permit\dataset-2026-10-06T06-46-09.472Z `
   ..\data\raw\phase3\pill-identification\dataset-2026-10-06T06-47-54.971Z `
-  ..\data\raw\phase3\safe-otc\dataset-2026-10-06T06-45-57.006Z
+  ..\data\raw\phase3\safe-otc\dataset-2026-10-06T06-45-57.006Z `
+  ..\data\normalized\drug-master\drug-master-handoff-2026-10-06.json
 ```
 
-기본 출력은 `.gitignore` 대상인 `back/data/normalized/drug-master/`와 `back/data/reports/drug-master/`에 저장됩니다. 이미지 URL과 `BIZRNO`는 권리/공식 field 의미 확인 전까지 정규화 산출물에서 제외하지만 raw snapshot에는 그대로 둡니다. 안전상비약은 product ID bridge가 없어 `unlinkedSources.safeOtc`에 분리합니다. 생성된 산출물은 [Phase 4 관찰 기록](sources/PHASE4-DRUG-MASTER-2026-10-06.md)에 기록합니다.
+마지막 argument는 output 경로를 지정합니다. 결과와 report는 `.gitignore` 대상인 `back/data/normalized/drug-master/`와 `back/data/reports/drug-master/`에 저장됩니다. 이 local output을 Phase 5/6 명령에서 재사용하세요. 이미지 URL과 `BIZRNO`는 권리/공식 field 의미 확인 전까지 정규화 산출물에서 제외하지만 raw snapshot에는 그대로 둡니다. 안전상비약은 product ID bridge가 없어 `unlinkedSources.safeOtc`에 분리합니다. 생성된 산출물은 [Phase 4 관찰 기록](sources/PHASE4-DRUG-MASTER-2026-10-06.md)에 기록합니다.
 
 Drug Master에서 1,000개까지의 deterministic systematic sample을 검토하려면 다음 명령을 사용합니다. 표본은 `mfdsItemSeq` lexical order를 기준으로 균등 간격 선택하며 random sample이 아니므로 population 전체의 비율 추정에 사용하지 않습니다. 이름 비교는 source 원문을 유지한 채 exact equality와 whitespace-removal diagnostic을 따로 보고합니다.
 
 ```powershell
 node -r ts-node/register ../data-poc/sources/phase5/sample-validation.ts `
-  ..\data\normalized\drug-master\drug-master-v1-2026-10-06T07-06-28.503Z.json 1000
+  ..\data\normalized\drug-master\drug-master-handoff-2026-10-06.json 1000
 ```
 
 기본 report 경로는 Git 제외 대상인 `back/data/reports/phase5/`입니다. 2026-10-06 표본 결과는 [Phase 5 관찰 기록](sources/PHASE5-SAMPLE-VALIDATION-2026-10-06.md)에 있습니다.
@@ -86,10 +87,21 @@ node -r ts-node/register ../data-poc/sources/phase5/snapshot-diff.ts `
 
 ```powershell
 node -r ts-node/register ../data-poc/sources/phase6/efficacy-evidence-worklist.ts `
-  ..\data\normalized\drug-master\drug-master-v1-2026-10-06T07-06-28.503Z.json
+  ..\data\normalized\drug-master\drug-master-handoff-2026-10-06.json `
+  ..\data\normalized\phase6-efficacy\efficacy-evidence-handoff-2026-10-06.json
 ```
 
 기본 출력은 Git 제외 대상인 `back/data/normalized/phase6-efficacy/` 아래에 저장됩니다. 2026-10-06 실행 결과와 제한은 [Phase 6 효능 원문 worklist 관찰](sources/PHASE6-EFFICACY-EVIDENCE-2026-10-06.md)에 기록합니다.
+
+`efficacy-text-spans.ts`는 이 worklist의 원문을 lexical separator 기준으로 span으로 나누고 각 text slice의 half-open UTF-16 offsets, stable span ID, 원문 provenance를 보존합니다. 결과는 여전히 사람 검토 대기이며 증상·질환·안전 의미를 부여하지 않습니다. API 재요청 없이 이어서 생성하려면 다음을 실행합니다.
+
+```powershell
+node -r ts-node/register ../data-poc/sources/phase6/efficacy-text-spans.ts `
+  ..\data\normalized\phase6-efficacy\efficacy-evidence-handoff-2026-10-06.json `
+  ..\data\normalized\phase6-efficacy\efficacy-text-spans-handoff-2026-10-06.json
+```
+
+세 파일(`drug-master-handoff-2026-10-06.json`, `efficacy-evidence-handoff-2026-10-06.json`, `efficacy-text-spans-handoff-2026-10-06.json`)은 원문 snapshot에서 만드는 ignored local outputs입니다. 매 실행은 기존 파일을 덮어쓰지 않으므로 다른 이름/날짜를 지정하세요.
 
 ## e약은요 현재 상태
 

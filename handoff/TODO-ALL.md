@@ -15,7 +15,7 @@
 - Phase 3 — **진행 중**. 제품허가·낱알식별 전체 snapshot, 안전상비약 13건, exact `itemSeq` 교차표를 확보. HIRA는 사용자 제공 XML과 로컬 zero-row 응답이 불일치하고, DUR base URL/실제 응답은 미확인; 조사 및 결과는 [`Phase 3 API source inventory`](../back/data-poc/sources/PHASE3-SOURCE-INVENTORY-2026-10-06.md)와 [`Phase 3 API observations`](../back/data-poc/sources/PHASE3-OBSERVATIONS-2026-10-06.md)
 - Phase 4 — **진행 중**. product-permit 기준 42,709개 `drugId`를 만들고, e약은요·낱알식별 exact JOIN과 원문 행 provenance를 가진 로컬 Drug Master v1 생성. 결과/필드 제한은 [`Phase 4 관찰 기록`](../back/data-poc/sources/PHASE4-DRUG-MASTER-2026-10-06.md)
 - Phase 5 — **진행 중**. 1,000개 표본 검토와 Master snapshot 비교기 구현 완료; 같은 네 원천 snapshot의 재생성 비교는 동일. 다른 시점 snapshot delta는 미완료. [`Phase 5 관찰 기록`](../back/data-poc/sources/PHASE5-SAMPLE-VALIDATION-2026-10-06.md)
-- Phase 6 — **초기 진행**. 실제 e약은요 효능 원문 4,747건을 제품 및 원문 행 출처에 연결해 검토 대기 worklist로 만들었음. 증상 분할/분류·사람 검토·질문·안전 규칙은 미착수. [`Phase 6 원문 worklist 기록`](../back/data-poc/sources/PHASE6-EFFICACY-EVIDENCE-2026-10-06.md)
+- Phase 6 — **초기 진행**. e약은요 효능 원문 worklist 4,747건과 lexical-only source span 35,230개를 provenance와 함께 생성, 전부 `pending`. 사람의 증상 분류·질문·안전 규칙은 미착수. [`Phase 6 원문/span 기록`](../back/data-poc/sources/PHASE6-EFFICACY-EVIDENCE-2026-10-06.md)
 - Phase 7–9 — **미착수**; Phase 10은 데이터 요건 충족 여부에 따른 조건부 검토
 - 병행 workstream — **미착수** (Content Evidence, Firestore/API 계약, 실제 서비스 UI/개인정보 경계)
 
@@ -90,7 +90,8 @@
 ## Phase 6 — Symptom Ontology, Question Bank, Safety Engine
 
 - [x] 검토 준비: Drug Master의 e약은요 효능 원문을 source text 그대로, 제품 ID와 `snapshot/rawFile/rowInPage`에 연결한 검토 대기 worklist로 생성. 자동 분할·증상 분류·안전 해석은 없음. [실행 근거](../back/data-poc/sources/PHASE6-EFFICACY-EVIDENCE-2026-10-06.md)
-- [ ] 실제 효능 원문에서 symptom/condition 후보를 찾고 원문 span과 source 연결
+- [x] lexical delimiter로 검토용 원문 span을 생성하고 exact UTF-16 offsets, stable span ID, source refs 보존; 35,230 spans 전부 `pending`. 이 단계에서는 symptom/condition 후보를 자동 분류하지 않음
+- [ ] 사람이 검토해 실제 symptom/condition 후보 span을 선택하고, 원문/source와 검토 근거를 연결
 - [ ] 효능 원문 parsing과 symptom classification/normalization 결과를 원문 및 사람 검토 상태와 분리
 - [ ] 사람 검토를 거친 symptom ontology와 사용자 표현 mapping 기준 작성
 - [ ] Question Bank에 question id, concept, text, answer type, possible answers, safety required, source, review status 기록

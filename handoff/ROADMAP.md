@@ -98,17 +98,18 @@ NestJS는 브라우저 REST API, 공식 API, Firestore, safety 처리와 Python 
 
 ### Phase 6 — Symptom Ontology, Question Bank, Safety Engine
 
-- 상태: [ ] 초기 진행 — 실제 e약은요 효능 원문 4,747건을 제품/source-row provenance에 연결한 검토 대기 worklist 생성. 개념 분류와 임상 검토는 수행하지 않음
+- 상태: [ ] 초기 진행 — 효능 원문 4,747건의 worklist와 35,230개의 lexical-only spans를 provenance와 함께 생성. 사람의 개념 분류와 임상 검토는 수행하지 않음
 - 계획 시작일/목표일: 미정
 - [x] Drug Master의 실제 e약은요 효능 원문을 변경하지 않고 제품 ID 및 원문 snapshot/page/row 참조를 보존한 검토 대기 worklist 생성
-- [ ] 실제 효능 원문에서 symptom/condition 후보를 source span과 함께 검토
+- [x] 사람이 검토할 수 있도록 lexical delimiter 기반 span, exact UTF-16 offsets, stable ID, source refs 생성; 모든 span은 pending이며 의미 판단은 하지 않음
+- [ ] 사람이 실제 symptom/condition 후보 span을 선택·분류하고 원문, source, 검토 근거에 연결
 - [ ] 검토된 symptom ontology와 사용자 표현 mapping 기준 작성
 - [ ] Question Bank에 question id/concept/text/answer type/possible answers/safety required/source/review status 기록
 - [ ] 필수 safety 질문(연령, 임신, 복용약, 알레르기, 위험 증상 등)을 승인된 근거와 함께 검토
 - [ ] NestJS에서 공식 주의사항, 상호작용, DUR, 연령·임부 조건 등 hard filter 설계
 - [ ] 질문 종료 조건은 simulation을 통해 정할 수 있도록 지표와 실험안을 준비
 - 완료 기준: 안전 관련 질문과 규칙은 source trace 및 필요한 human review를 갖추고 ranking 전에 적용
-- 결과/제한: [`PHASE6-EFFICACY-EVIDENCE-2026-10-06.md`](../back/data-poc/sources/PHASE6-EFFICACY-EVIDENCE-2026-10-06.md); 4,747개 원문 evidence가 모두 `pending`이며 symptom/safety 의미는 부여하지 않음
+- 결과/제한: [`PHASE6-EFFICACY-EVIDENCE-2026-10-06.md`](../back/data-poc/sources/PHASE6-EFFICACY-EVIDENCE-2026-10-06.md); 4,747개 원문 evidence와 35,230개 lexical spans가 모두 검토 대기이며 symptom/safety 의미는 부여하지 않음
 - 게이트: NLP/AI 후보 추출만으로 새 의료 질문이나 안전 규칙을 즉시 운영하지 않습니다.
 
 ### Phase 7 — Python Deterministic Baseline / Similarity / Adaptive Questions

@@ -1,6 +1,6 @@
 # 집약국 (JibYakGuk)
 
-공식 의약품 데이터를 출처로 삼는 생활 의약품 탐색 서비스의 저장소입니다. Phase 1 앱 골격, Phase 2–5 실제 의약품 데이터 검증, Drug Master v1, 그리고 Phase 6 효능 원문 검토 대기 worklist가 있습니다. 증상 분류·안전 판단·추천 결과는 아직 제공하지 않습니다.
+공식 의약품 데이터를 출처로 삼는 생활 의약품 탐색 서비스의 저장소입니다. Phase 1 앱 골격, Phase 2–5 실제 의약품 데이터 검증, Drug Master v1, 그리고 Phase 6 효능 원문 worklist와 lexical review spans가 있습니다. 사람 검토된 증상 분류·안전 판단·추천 결과는 아직 제공하지 않습니다.
 
 Phase 1 상태와 Phase 2 인수인계 항목은 [handoff 문서](handoff/README.md)를 참고하세요.
 

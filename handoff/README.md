@@ -49,7 +49,7 @@ Phase 1의 Frontend/NestJS/Python 앱 골격은 유지되고 있습니다. 2026-
 
 1. `main`에서 push된 commit을 checkout/pull합니다. 이 commit에는 코드·문서와 현재 검증에 사용한 raw API snapshots가 함께 있으므로 기존 snapshot을 다시 수집할 필요가 없습니다.
 2. `back/node/`에서 기존 `package-lock.json`에 따라 `npm ci`를 한 번 실행합니다. 이는 로컬 변환기를 준비하며 공식 API를 호출하지 않습니다.
-3. [Data PoC README](../back/data-poc/README.md)의 Phase 4 명령으로 raw snapshot에서 Drug Master를 재생성한 뒤 Phase 6 명령으로 efficacy worklist를 생성합니다. 생성 결과와 입력 디렉터리는 명령 출력에서 확인합니다.
+3. [Data PoC README](../back/data-poc/README.md)의 Phase 4, 6 명령으로 raw snapshot에서 Drug Master, efficacy worklist, 원문 lexical spans를 재생성합니다. 각 명령에는 push된 snapshot 경로와 local output 경로가 적혀 있으며 API 재요청은 없습니다.
 4. API를 새로 조사하거나 최신 snapshot이 필요한 작업에 한해서만 로컬 `.env`의 `DATA_GO_KR_SERVICE_KEY`를 사용합니다. 키를 Git, 문서, 로그, 채팅에 복사하지 않습니다.
 5. 다음 미완료 사항을 처리하고 날짜별 이력은 [`daily/`](daily/README.md)에 새 날짜 파일로 남깁니다.
 
