@@ -55,7 +55,7 @@ NestJS는 브라우저 REST API, 공식 API, Firestore, safety 처리와 Python 
 
 ### Phase 3 — 공식 데이터 source 확장과 JOIN PoC
 
-- 상태: [ ] 제품허가/낱알식별 전체 snapshot, 안전상비약 raw, exact ID JOIN report 확보 완료. HIRA 공식 catalog가 general-name code의 drug-price-list source를 가리키는 점과 샘플 literal 비교(일치 0)는 확인했지만 operation contract/live non-empty response/identifier bridge, DUR base URL은 미확인
+- 상태: [ ] 제품허가/낱알식별 전체 snapshot, 안전상비약 raw, exact ID JOIN report 확보 완료. HIRA는 사용자가 네 조건을 넣은 요청 및 `totalCount=1` 응답을 제공했으나 프로젝트의 local 요청에서는 아직 재현되지 않음; 약가목록 operation contract/identifier bridge, DUR base URL은 미확인
 - 계획 시작일/목표일: 미정
 - source 목록/확인 경계: [`PHASE3-SOURCE-INVENTORY-2026-10-06.md`](../back/data-poc/sources/PHASE3-SOURCE-INVENTORY-2026-10-06.md)
 - [x] 알려진 4개 source의 raw-only 단건 요청, source-specific query allowlist, JSON 전체 페이지 수집 및 pagination 검증 준비
@@ -64,8 +64,10 @@ NestJS는 브라우저 REST API, 공식 API, Firestore, safety 처리와 Python 
 - [ ] DUR API 승인, 최신 operation, 실제 요청/응답, coverage 확인
 - [x] 안전상비의약품 API 실제 13행 요청/응답과 식별자 필드 부재 확인
 - [x] 낱알식별 API 25,437 rows/51 pages full raw response; exact `ITEM_SEQ` match 2,751/4,740 unique e약은요 IDs 확인
-- [ ] HIRA API: HWP는 네 검색조건 중 최소 하나를 요구함. 조건을 넣은 local 단건 요청은 totalCount=0; 이전 no-filter 0건 결과는 HWP 조건을 만족하지 않아 데이터 비어 있음의 증거에서 제외. 원문 XML parser·user-sample parse 및 MFDS `ITEM_INGR_NAME` exact-literal feasibility check는 구현했으나 비교 일치 0. 이는 `gnlNmCd` bridge를 만들지 않으며, non-empty API response 및 별도 HIRA drug-price API operation contract 확인은 미완료
-- [x] e약은요/product permit/pill/safe OTC identifier crosswalk, duplicate/missing counts 및 exact JOIN율 report 생성; safe-OTC의 identifier 부재와 HIRA empty-response 한계를 기록
+- [x] HIRA user-provided filtered request/response pair recorded: all four search filters, XML `resultCode=00` and `totalCount=1`; service key omitted and HTTP status not provided
+- [ ] Reproduce that HIRA query through the local project client and preserve the local raw response. Previous local probes returned 0 and the latest attempt failed before HTTP response; retry one filtered request from a working network path. The no-filter result remains diagnostic only and is not evidence of an empty dataset
+- [ ] Confirm separate HIRA drug-price-list API request contract and test any `gnlNmCd` source/bridge; current literal check against MFDS `ITEM_INGR_NAME` had zero exact matches and does not establish a mapping
+- [x] e약은요/product permit/pill/safe OTC identifier crosswalk, duplicate/missing counts 및 exact JOIN율 report 생성; safe-OTC identifier 부재와 HIRA-to-product identifier bridge 미확정 사유 기록
 - 완료 기준: 실제 source response와 identifier 의미가 확인되고, JOIN 결과 및 미연결 이유를 정량화
 - 게이트: 제품명 fuzzy matching으로 JOIN 성공률을 부풀리지 않습니다. 문서의 field명과 실제 응답이 다르면 차이를 기록합니다.
 

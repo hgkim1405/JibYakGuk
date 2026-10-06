@@ -12,7 +12,7 @@
 
 - Phase 1 — **완료** (2026-10-02)
 - Phase 2 — **진행 중**. 4,757행 raw/정규화/coverage와 재현 이미지 URL 검사기를 확보. 이미지 표본은 현재 DNS `ENOTFOUND` 20/20이라 HTTP 접근성은 미측정. product permit exact ID join 후 `bizrno` 값은 4,757/4,757 일치했지만 공식 정의·사용 범위, 이미지 권리와 중복 의도는 미확인
-- Phase 3 — **진행 중**. 제품허가·낱알식별 전체 snapshot, 안전상비약 13건, exact `itemSeq` 교차표를 확보. HIRA는 사용자 제공 XML과 로컬 zero-row 응답이 불일치하고, DUR base URL/실제 응답은 미확인; 조사 및 결과는 [`Phase 3 API source inventory`](../back/data-poc/sources/PHASE3-SOURCE-INVENTORY-2026-10-06.md)와 [`Phase 3 API observations`](../back/data-poc/sources/PHASE3-OBSERVATIONS-2026-10-06.md)
+- Phase 3 — **진행 중**. 제품허가·낱알식별 전체 snapshot, 안전상비약 13건, exact `itemSeq` 교차표를 확보. HIRA는 사용자 제공의 필터 요청/1건 응답이 확인됐으나 로컬 요청은 zero-row이며 재현되지 않음; DUR base URL/실제 응답은 미확인. 조사 및 결과는 [`Phase 3 API source inventory`](../back/data-poc/sources/PHASE3-SOURCE-INVENTORY-2026-10-06.md)와 [`Phase 3 API observations`](../back/data-poc/sources/PHASE3-OBSERVATIONS-2026-10-06.md)
 - Phase 4 — **진행 중**. product-permit 기준 42,709개 `drugId`를 만들고, e약은요·낱알식별 exact JOIN과 원문 행 provenance를 가진 로컬 Drug Master v1 생성. 결과/필드 제한은 [`Phase 4 관찰 기록`](../back/data-poc/sources/PHASE4-DRUG-MASTER-2026-10-06.md)
 - Phase 5 — **진행 중**. 1,000개 표본 검토와 Master snapshot 비교기 구현 완료; 같은 네 원천 snapshot의 재생성 비교는 동일. 다른 시점 snapshot delta는 미완료. [`Phase 5 관찰 기록`](../back/data-poc/sources/PHASE5-SAMPLE-VALIDATION-2026-10-06.md)
 - Phase 6 — **초기 진행**. e약은요 효능 원문 worklist 4,747건과 lexical-only source span 35,230개를 provenance와 함께 생성, 전부 `pending`. 사람의 증상 분류·질문·안전 규칙은 미착수. [`Phase 6 원문/span 기록`](../back/data-poc/sources/PHASE6-EFFICACY-EVIDENCE-2026-10-06.md)
@@ -59,13 +59,15 @@
 - [ ] DUR service key의 활용신청·승인 상태와 quota 확인. 사용자가 제공한 승인 화면 또는 계정의 API 활용현황 근거가 필요
 - [x] 안전상비의약품 API: 실제 요청·13행 raw response 확보; 문서와 실제 필드 대조. `itemSeq`가 없어 exact identifier bridge 없음으로 기록
 - [x] 낱알식별 API: 전체 raw response/schema/coverage 확보; `ITEM_SEQ` exact ID 기준 e약은요 2,751/4,740 unique matches 확인
-- [ ] HIRA 의약품성분약효정보 API: 사용자 제공 XML은 별도 보존. 최소 1개 공식 HWP filter를 넣은 로컬 요청도 모두 0 rows라 실제 non-empty response와 일반명 코드 관계는 미확정. 공식 catalog가 HIRA 약가목록 operation을 `gnlNmCd` source로 지목하지만 그 operation의 요청 계약을 더 확인해야 함
+- [x] HIRA 의약품성분약효정보 API: 사용자가 네 개 필터 값을 넣은 요청과 `resultCode=00`, `totalCount=1` XML을 함께 제공; request values와 response는 별도 provenance로 저장. service key와 HTTP status는 보존하지 않음
+- [ ] 같은 HIRA 필터 요청을 프로젝트 client로 재현해 locally fetched raw/XML 확보. 기존 local HTTP 응답은 `totalCount=0`, 이번 재시도는 HTTP 응답 전에 fetch 실패. 네트워크 응답이 가능한 환경에서 단건만 재시도하고 사용자 제공 응답을 로컬 수집물로 표기하지 않음
+- [ ] HIRA 약가목록 operation의 실제 request contract 확인 후 `gnlNmCd` source/제품 ingredient bridge 검토; 사용자 sample 1건만으로 mapping을 만들지 않음
 - [x] HIRA XML parser로 실제 저장된 local zero-row 응답 5개와 출처가 표시된 user-provided one-row XML을 파싱; item tag names와 provenance를 그대로 보존. 이는 live non-empty HIRA response 검증을 대체하지 않음
 - [x] 사용자 제공 HIRA HWP v1.1의 “4개 검색조건 중 최소 1개” 사용 제약을 반영해 Phase 3 client가 무필터 HIRA 요청을 API 호출 전에 거부하고 README 예시도 필터 포함으로 수정. 기존 무필터 zero-row raw는 진단 자료로 보존하되 dataset empty의 증거로 쓰지 않음
 - [x] 사용자 제공 HIRA 샘플의 `gnlNmCd`/`gnlNm`을 기존 MFDS product-permit 42,709행의 `ITEM_INGR_NAME`과 exact literal로 비교: 비어 있지 않은 42,631행에서 일반명·코드 일치 0. 재현기는 추가했지만 이 결과는 identifier mapping이 아니며 이름 정규화/fuzzy join도 수행하지 않음
 - [ ] DUR API는 승인 화면/공식 Swagger에서 확인된 base URL·operation으로 단건 raw response를 확보하고, 실제 구조와 coverage를 분석
 - [x] product-permit, safe-OTC, pill-identification의 실제 response fields/pagination/operation 동작을 raw response와 대조. HIRA field-name variants는 guide·user sample에 각각 있으나 local live 응답에서 검증되지 않음
-- [x] e약은요/product permit/pill identification/safe OTC exact identifier 교차표 작성; HIRA empty live results, safe OTC에 identifier 없음으로 미연결 사유 기록
+- [x] e약은요/product permit/pill identification/safe OTC exact identifier 교차표 작성; safe OTC에 identifier 없고 HIRA-to-product identifier bridge도 없어 미연결 사유 기록
 - [x] 위 source의 ID 누락·중복·field variation을 aggregate report로 집계. product permit ID duplicate 0, pill ID duplicate 10 groups/17 extra rows; product-name fuzzy matching 미사용
 - [x] `pillIdentificationMatched`를 exact `itemSeq === ITEM_SEQ` 결과로 측정: 2,751/4,740 unique IDs (58.0%), row denominator도 기록
 - [ ] Phase 3 완료 조건: 실제 응답과 identifier 의미를 확인하고 JOIN 결과 및 미연결 사유를 설명 가능

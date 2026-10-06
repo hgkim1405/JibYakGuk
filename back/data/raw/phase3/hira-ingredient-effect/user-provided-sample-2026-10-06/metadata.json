@@ -1,9 +1,10 @@
 {
   "source": "hira-ingredient-effect",
-  "captureOrigin": "user-provided chat message",
+  "captureOrigin": "user-provided chat message (filtered request and response supplied)",
   "capturedAt": "2026-10-06",
   "httpStatus": null,
   "requestParameterNames": [
+    "serviceKey",
     "numOfRows",
     "pageNo",
     "gnlNmCd",
@@ -11,6 +12,14 @@
     "meftDivNo",
     "divNm"
   ],
+  "requestParameterValues": {
+    "numOfRows": "10",
+    "pageNo": "1",
+    "gnlNmCd": "100101AGN",
+    "gnlNm": "상황균사체엑스",
+    "meftDivNo": "421",
+    "divNm": "항악성종양제"
+  },
   "serviceKey": "omitted",
-  "note": "This supplied XML sample is retained separately from locally fetched API responses. The local replay with the supplied filters returned HTTP 200 and totalCount=0; the discrepancy remains unresolved."
+  "note": "The user supplied this complete filtered request and matching XML response. The response reports resultCode=00 and totalCount=1. No HTTP status was supplied, and this is not a locally fetched response. Local requests with the same filters previously returned HTTP 200 and totalCount=0; the difference remains unresolved."
 }

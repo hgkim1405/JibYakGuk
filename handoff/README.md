@@ -44,7 +44,7 @@ Phase 1의 Frontend/NestJS/Python 앱 골격은 유지되고 있습니다. 2026-
 
 2026-10-06에 [공식 API 상세](https://www.data.go.kr/data/15075057/openapi.do)에서 무료, 개발 quota 10,000/day, 이용허락범위 제한 없음을 확인했습니다. [포털 이용정책](https://www.data.go.kr/ugs/selectPortalPolicyView.do)은 제3자 권리 저작물에 별도 허락이 필요하다고 명시합니다. 성공 응답은 탐색 3회와 전체 snapshot 48회, 총 51건입니다. 응답을 받지 못한 연결 시도 1회가 quota에 집계됐는지는 확인하지 못했습니다. 이미지 자체의 재사용 권리는 이 API 페이지로 확정하지 않았습니다.
 
-각 Phase 3 live 요청에서 `back/node/.env`의 service-key 설정을 사용했습니다. 변수 설정은 boolean으로만 확인했고 key 값은 읽거나 출력하지 않았습니다. `.env`는 Git에서 제외됩니다. 제품허가·낱알식별 `numOfRows=1000` error 응답은 실제 `resultCode=11`, maximum 500이었고 raw로 남겼습니다. HIRA 로컬 요청은 문서 sample 필터를 포함해 HTTP 200/`resultCode=00`/`totalCount=0`이었으며, 사용자가 제공한 totalCount=1 XML과 일치하지 않아 양쪽을 provenance 구분해 기록했습니다.
+각 Phase 3 live 요청에서 `back/node/.env`의 service-key 설정을 사용했습니다. 변수 설정은 boolean으로만 확인했고 key 값은 읽거나 출력하지 않았습니다. `.env`는 Git에서 제외됩니다. 제품허가·낱알식별 `numOfRows=1000` error 응답은 실제 `resultCode=11`, maximum 500이었고 raw로 남겼습니다. HIRA 로컬 필터 요청은 HTTP 200/`resultCode=00`/`totalCount=0`이었습니다. 사용자가 동일한 네 필터값의 요청과 `totalCount=1` XML을 제공했으며, HTTP status는 확인되지 않아 user-provided와 local raw를 provenance로 분리했습니다.
 
 ## 집 PC에서 이어서 하기
 
@@ -54,7 +54,7 @@ Phase 1의 Frontend/NestJS/Python 앱 골격은 유지되고 있습니다. 2026-
 4. API를 새로 조사하거나 최신 snapshot이 필요한 작업에 한해서만 로컬 `.env`의 `DATA_GO_KR_SERVICE_KEY`를 사용합니다. 키를 Git, 문서, 로그, 채팅에 복사하지 않습니다.
 5. 다음 미완료 사항을 처리하고 날짜별 이력은 [`daily/`](daily/README.md)에 새 날짜 파일로 남깁니다.
 
-HIRA live probe는 로컬 `.env` key로 `numOfRows=10`, `pageNo=1`과 no-filter/공식 example/full example filters를 각각 요청했습니다. 모두 HTTP 200 및 `resultCode=00`이지만 `totalCount=0`입니다. 사용자가 제공한 totalCount=1 XML은 별도 user-provided raw로 보존했고 local replay와 다르다는 점을 기록했습니다. 이유는 아직 알 수 없습니다.
+HIRA live probe는 로컬 `.env` key로 `numOfRows=10`, `pageNo=1`과 no-filter/공식 example/full example filters를 각각 요청했습니다. 로컬 응답은 HTTP 200 및 `resultCode=00`이지만 `totalCount=0`이었습니다. 사용자가 네 필터 요청값과 일치하는 XML `totalCount=1` response를 제공했습니다. 방금 같은 조건으로 project client를 재시도했으나 HTTP 응답 전에 fetch가 실패했고 raw capture는 없습니다. 다음에는 네트워크 응답이 가능한 환경에서 단건 요청을 재시도합니다.
 
 이번 개발 실행에서는 `Resolve-DnsName` 호출이 `apis.data.go.kr`, `nedrug.mfds.go.kr` 모두 `access denied`를 반환했습니다. 이는 과거 API 요청의 `ENOTFOUND`와 구분되는 실행 환경 접근 제한이며 원격 endpoint나 이미지의 HTTP 상태를 나타내지 않습니다.
 
@@ -62,7 +62,7 @@ HIRA live probe는 로컬 `.env` key로 `numOfRows=10`, `pageNo=1`과 no-filter/
 
 1. 집 PC에서 이미 push된 raw를 사용해 normalized 데이터·worklist·HIRA exact-text comparison을 로컬 생성하며, 새 날짜 snapshot delta가 필요한지 판단
 2. DNS/HTTPS가 되는 환경에서 [이미지 URL 표본 실행기](../back/data-poc/sources/easy-drug/image-url-audit.ts)를 실행해 HTTP status/content type을 분류; 과거 `ENOTFOUND`/이번 `access denied`는 URL별 HTTP 결과가 아님
-3. HIRA 약가목록 API의 공식 operation/request contract를 확인해 `gnlNmCd` source를 조사하고, HIRA example/user XML과 local `totalCount=0` 차이를 재현
+3. 네트워크 응답이 가능한 환경에서 HIRA project client로 사용자의 네 필터 요청을 단건 재시도해 local raw response 확보; 이어 약가목록 API의 공식 operation/request contract를 확인해 `gnlNmCd` source와 결과 차이를 조사
 4. DUR 활용신청 상태와 base URL/operation을 사용자 승인화면 또는 공식 Swagger에서 확인하고, source-specific 단건 raw response를 확보
 5. 제공기관 공식 문서/답변으로 `bizrno` 의미 및 사용범위, e약은요 duplicate `itemSeq`의 multiple-image 관계, linked image rights 확인
 6. 효능 span은 qualified human reviewer가 원문과 승인된 근거를 검토한 뒤에만 symptom ontology/question/safety rule로 진행; 그 이후 data contract, deterministic baseline, simulation, ML 검토, UI 연결
