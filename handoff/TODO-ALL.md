@@ -38,6 +38,7 @@
 ## Phase 2 — e약은요 데이터 PoC 마무리
 
 - [ ] 집 PC 또는 DNS가 정상 동작하는 환경에서 `nedrug.mfds.go.kr` 이미지 URL 표본의 HTTP 접근성 재확인. 네트워크 오류와 실제 HTTP 오류를 구분
+- [x] 이번 개발 환경에서 `apis.data.go.kr`, `nedrug.mfds.go.kr` DNS 조회도 시도했으나 프로세스가 `access denied`를 반환함을 기록. 이는 DNS `ENOTFOUND`나 원격 서비스 장애가 아니며 이미지 상태 분류에 쓰지 않음
 - [x] `brokenImageUrl` 표본 산출 방법 확정: 현재 snapshot의 non-empty distinct URL 2,767개를 모집단으로 하고, lexical sort 후 균등 간격으로 20개를 고르는 재현 표본으로 기록. 표본 결과만 보고 전체 URL 비율로 일반화하지 않음. 기존 ad hoc 20건은 선정 방식이 남지 않아 측정 통계에서 제외
 - [ ] 이미지 파일을 저장·재사용·재배포할 경우의 저작권/이용 조건을 확인. API의 “제한 없음” 표기만으로 제3자 이미지 권리까지 단정하지 않음
 - [ ] 제공기관 문서 또는 답변으로 응답에 포함된 `bizrno`의 공식 의미와 사용 범위 확인. 확인 전에는 normalized 구조에서 제외 유지
@@ -54,12 +55,14 @@
 - [x] 사용자 제공 승인 자료와 공식 문서에서 확인 가능한 operation 경로·request parameter·인증 파라미터 대소문자·format을 source inventory에 옮기고, 실제 응답 schema/불확실성을 구분
 - [ ] 사용자 제공 승인 화면/공식 Swagger에서 DUR service base URL과 최신 operation 경로 확인
 - [x] 의약품 제품 허가정보 API: 실제 요청·raw snapshot, `totalCount=42,709`, 86/86 page, 관찰 schema·exact `itemSeq` JOIN coverage 확보
-- [ ] DUR API: 현재 사용 조건/승인/quota 확인, 실제 요청·raw response·응답 구조·coverage 확보
+- [x] 공공데이터포털 DUR catalog의 현재 공개 metadata 확인: 무료, JSON/XML, 이용허락범위 제한 없음, 개발·운영 자동승인, 개발 quota 10,000/day. 이는 현재 키의 실제 활용신청 상태를 확인한 뜻은 아님
+- [ ] DUR service key의 활용신청·승인 상태와 quota 확인. 사용자가 제공한 승인 화면 또는 계정의 API 활용현황 근거가 필요
 - [x] 안전상비의약품 API: 실제 요청·13행 raw response 확보; 문서와 실제 필드 대조. `itemSeq`가 없어 exact identifier bridge 없음으로 기록
 - [x] 낱알식별 API: 전체 raw response/schema/coverage 확보; `ITEM_SEQ` exact ID 기준 e약은요 2,751/4,740 unique matches 확인
-- [ ] HIRA 의약품성분약효정보 API: 사용자 제공 XML은 별도 보존. 로컬 요청은 문서 샘플 필터 포함 모두 0 rows라 실제 non-empty response와 일반명 코드 관계는 미확정. HIRA 약가 API에서 코드 source/operation 조사 필요
+- [ ] HIRA 의약품성분약효정보 API: 사용자 제공 XML은 별도 보존. 로컬 요청은 문서 샘플 필터 포함 모두 0 rows라 실제 non-empty response와 일반명 코드 관계는 미확정. 공식 catalog가 HIRA 약가목록 operation을 `gnlNmCd` source로 지목하지만 그 operation의 요청 계약을 더 확인해야 함
 - [x] HIRA XML parser로 실제 저장된 local zero-row 응답 5개와 출처가 표시된 user-provided one-row XML을 파싱; item tag names와 provenance를 그대로 보존. 이는 live non-empty HIRA response 검증을 대체하지 않음
-- [ ] DUR API는 사용자 제공 승인 화면/공식 Swagger에서 service base URL, 현재 사용 조건·승인, operation을 확인하고 raw response/coverage 수집
+- [x] 사용자 제공 HIRA 샘플의 `gnlNmCd`/`gnlNm`을 기존 MFDS product-permit 42,709행의 `ITEM_INGR_NAME`과 exact literal로 비교: 비어 있지 않은 42,631행에서 일반명·코드 일치 0. 재현기는 추가했지만 이 결과는 identifier mapping이 아니며 이름 정규화/fuzzy join도 수행하지 않음
+- [ ] DUR API는 승인 화면/공식 Swagger에서 확인된 base URL·operation으로 단건 raw response를 확보하고, 실제 구조와 coverage를 분석
 - [x] product-permit, safe-OTC, pill-identification의 실제 response fields/pagination/operation 동작을 raw response와 대조. HIRA field-name variants는 guide·user sample에 각각 있으나 local live 응답에서 검증되지 않음
 - [x] e약은요/product permit/pill identification/safe OTC exact identifier 교차표 작성; HIRA empty live results, safe OTC에 identifier 없음으로 미연결 사유 기록
 - [x] 위 source의 ID 누락·중복·field variation을 aggregate report로 집계. product permit ID duplicate 0, pill ID duplicate 10 groups/17 extra rows; product-name fuzzy matching 미사용

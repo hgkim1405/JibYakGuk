@@ -41,6 +41,19 @@ python ..\data-poc\sources\phase3\hira_xml_parser.py `
 
 기본 JSON 출력은 `.gitignore` 대상 `back/data/normalized/hira-ingredient-effect/` 아래에 저장됩니다. 사용자 예시 응답과 live API raw는 서로 다른 provenance를 갖습니다.
 
+사용자 제공 XML의 일반명 코드·일반명 텍스트가 기존 MFDS product-permit snapshot의 `ITEM_INGR_NAME` 필드와 직접 겹치는지 exact literal만 비교하려면 다음 명령을 실행합니다. 이는 이름 변환이나 fuzzy matching, HIRA 코드와 MFDS 품목 식별자의 mapping을 수행하지 않으며 공식 identifier bridge를 증명하지 않습니다.
+
+```powershell
+python ..\data-poc\sources\phase3\hira-ingredient-crosscheck.py `
+  ..\data\raw\phase3\product-permit\dataset-2026-10-06T06-46-09.472Z `
+  ..\data\raw\phase3\hira-ingredient-effect\user-provided-sample-2026-10-06 `
+  ..\data\reports\phase3\hira-ingredient-crosscheck-2026-10-06-literal-v2.json
+```
+
+도구는 complete manifest/page 수와 성공 envelope를 확인하고, 사용자 sample의 provenance marker도 검사합니다. 이 snapshot에서는 42,631개 비어 있지 않은 `ITEM_INGR_NAME` 중 HIRA sample의 일반명/코드 literal 일치가 0건이었습니다. 이 결과는 local report에 기록하고, HIRA drug-price list API 계약이나 live HIRA 응답을 대체하지 않습니다.
+
+출력은 기존 파일을 덮어쓰지 않으므로 같은 경로로 이미 실행했다면 새 output 파일명을 지정하세요.
+
 Phase 3 snapshot의 exact identifier 교차표와 필드 coverage 보고서는 [`phase3.analysis.ts`](sources/phase3/phase3.analysis.ts)로 생성합니다. 자세한 2026-10-06 결과는 [Phase 3 API 관찰](sources/PHASE3-OBSERVATIONS-2026-10-06.md)에 있습니다.
 
 ## Phase 4 Drug Master v1

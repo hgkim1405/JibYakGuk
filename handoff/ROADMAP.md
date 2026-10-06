@@ -1,6 +1,7 @@
 # 집약국(JibYakGuk) 전체 개발 계획
 
 - 계획 기준일: 2026-10-02 (Asia/Seoul)
+- 마지막 재점검: 2026-10-06 (Asia/Seoul)
 - 기준 문서: 사용자가 제공한 「집약국 전체 프로젝트 개발 지침」
 - 일정: 별도 합의 전까지 시작일/목표일은 미정
 - 상태와 날짜 이력: [`daily/`](daily/README.md)의 `YYYY-MM-DD.md` 작업 기록에서 관리
@@ -54,7 +55,7 @@ NestJS는 브라우저 REST API, 공식 API, Firestore, safety 처리와 Python 
 
 ### Phase 3 — 공식 데이터 source 확장과 JOIN PoC
 
-- 상태: [ ] 제품허가/낱알식별 전체 snapshot, 안전상비약 raw, exact ID JOIN report 확보 완료. HIRA non-empty response와 DUR source 확인은 미완료
+- 상태: [ ] 제품허가/낱알식별 전체 snapshot, 안전상비약 raw, exact ID JOIN report 확보 완료. HIRA 공식 catalog가 general-name code의 drug-price-list source를 가리키는 점과 샘플 literal 비교(일치 0)는 확인했지만 operation contract/live non-empty response/identifier bridge, DUR base URL은 미확인
 - 계획 시작일/목표일: 미정
 - source 목록/확인 경계: [`PHASE3-SOURCE-INVENTORY-2026-10-06.md`](../back/data-poc/sources/PHASE3-SOURCE-INVENTORY-2026-10-06.md)
 - [x] 알려진 4개 source의 raw-only 단건 요청, source-specific query allowlist, JSON 전체 페이지 수집 및 pagination 검증 준비
@@ -63,7 +64,7 @@ NestJS는 브라우저 REST API, 공식 API, Firestore, safety 처리와 Python 
 - [ ] DUR API 승인, 최신 operation, 실제 요청/응답, coverage 확인
 - [x] 안전상비의약품 API 실제 13행 요청/응답과 식별자 필드 부재 확인
 - [x] 낱알식별 API 25,437 rows/51 pages full raw response; exact `ITEM_SEQ` match 2,751/4,740 unique e약은요 IDs 확인
-- [ ] HIRA API: 공급된 HWP guide, XML example을 대조하고 단건 요청했으나 locally fetched sample filters 모두 totalCount=0. 원문 XML parser 및 user-sample parse는 구현. non-empty API response 및 general-name-code bridge 미완료; 별도 HIRA drug-price API operation 확인 필요
+- [ ] HIRA API: 공급된 HWP guide, XML example을 대조하고 단건 요청했으나 locally fetched sample filters 모두 totalCount=0. 원문 XML parser·user-sample parse 및 MFDS `ITEM_INGR_NAME` exact-literal feasibility check는 구현했으나 비교 일치 0. 이는 `gnlNmCd` bridge를 만들지 않으며, non-empty API response 및 별도 HIRA drug-price API operation contract 확인은 미완료
 - [x] e약은요/product permit/pill/safe OTC identifier crosswalk, duplicate/missing counts 및 exact JOIN율 report 생성; safe-OTC의 identifier 부재와 HIRA empty-response 한계를 기록
 - 완료 기준: 실제 source response와 identifier 의미가 확인되고, JOIN 결과 및 미연결 이유를 정량화
 - 게이트: 제품명 fuzzy matching으로 JOIN 성공률을 부풀리지 않습니다. 문서의 field명과 실제 응답이 다르면 차이를 기록합니다.

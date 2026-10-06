@@ -49,19 +49,22 @@ Phase 1의 Frontend/NestJS/Python 앱 골격은 유지되고 있습니다. 2026-
 
 1. `main`에서 push된 commit을 checkout/pull합니다. 이 commit에는 코드·문서와 현재 검증에 사용한 raw API snapshots가 함께 있으므로 기존 snapshot을 다시 수집할 필요가 없습니다.
 2. `back/node/`에서 기존 `package-lock.json`에 따라 `npm ci`를 한 번 실행합니다. 이는 로컬 변환기를 준비하며 공식 API를 호출하지 않습니다.
-3. [Data PoC README](../back/data-poc/README.md)의 Phase 4, 6 명령으로 raw snapshot에서 Drug Master, efficacy worklist, 원문 lexical spans를 재생성합니다. 각 명령에는 push된 snapshot 경로와 local output 경로가 적혀 있으며 API 재요청은 없습니다.
+3. [Data PoC README](../back/data-poc/README.md)의 Phase 4·6 및 HIRA exact-text comparison 명령으로 raw snapshot에서 Drug Master, efficacy worklist, 원문 lexical spans, 비교 report를 재생성합니다. 기존 API raw를 재수집하지 않습니다.
 4. API를 새로 조사하거나 최신 snapshot이 필요한 작업에 한해서만 로컬 `.env`의 `DATA_GO_KR_SERVICE_KEY`를 사용합니다. 키를 Git, 문서, 로그, 채팅에 복사하지 않습니다.
 5. 다음 미완료 사항을 처리하고 날짜별 이력은 [`daily/`](daily/README.md)에 새 날짜 파일로 남깁니다.
 
 HIRA live probe는 로컬 `.env` key로 `numOfRows=10`, `pageNo=1`과 no-filter/공식 example/full example filters를 각각 요청했습니다. 모두 HTTP 200 및 `resultCode=00`이지만 `totalCount=0`입니다. 사용자가 제공한 totalCount=1 XML은 별도 user-provided raw로 보존했고 local replay와 다르다는 점을 기록했습니다. 이유는 아직 알 수 없습니다.
 
+이번 개발 실행에서는 `Resolve-DnsName` 호출이 `apis.data.go.kr`, `nedrug.mfds.go.kr` 모두 `access denied`를 반환했습니다. 이는 과거 API 요청의 `ENOTFOUND`와 구분되는 실행 환경 접근 제한이며 원격 endpoint나 이미지의 HTTP 상태를 나타내지 않습니다.
+
 ## 다음 작업 순서
 
-1. DNS가 되는 환경에서 [이미지 URL 표본 실행기](../back/data-poc/sources/easy-drug/image-url-audit.ts)를 다시 실행해 HTTP status/content type을 분류; 현재 report의 `ENOTFOUND` 20건은 URL별 HTTP 결과가 아님
-2. HIRA 약가목록 API의 공식 operation/request contract를 확인해 `gnlNmCd` source를 조사하고, HIRA example/user XML과 local `totalCount=0` 차이를 재현
-3. DUR base URL과 승인 상태를 사용자 제공 승인화면/official Swagger에서 확인하고, source-specific raw response 수집
-4. 제공기관 공식 문서/답변으로 `bizrno` 의미 및 사용범위, e약은요 duplicate `itemSeq`의 multiple-image 관계, linked image rights 확인
-5. 나머지 source/identifier 확인 뒤 Drug Master, Safety Engine, Python baseline, simulation, ML/Deep Learning 검토 및 UI 연결
+1. 집 PC에서 이미 push된 raw를 사용해 normalized 데이터·worklist·HIRA exact-text comparison을 로컬 생성하며, 새 날짜 snapshot delta가 필요한지 판단
+2. DNS/HTTPS가 되는 환경에서 [이미지 URL 표본 실행기](../back/data-poc/sources/easy-drug/image-url-audit.ts)를 실행해 HTTP status/content type을 분류; 과거 `ENOTFOUND`/이번 `access denied`는 URL별 HTTP 결과가 아님
+3. HIRA 약가목록 API의 공식 operation/request contract를 확인해 `gnlNmCd` source를 조사하고, HIRA example/user XML과 local `totalCount=0` 차이를 재현
+4. DUR 활용신청 상태와 base URL/operation을 사용자 승인화면 또는 공식 Swagger에서 확인하고, source-specific 단건 raw response를 확보
+5. 제공기관 공식 문서/답변으로 `bizrno` 의미 및 사용범위, e약은요 duplicate `itemSeq`의 multiple-image 관계, linked image rights 확인
+6. 효능 span은 qualified human reviewer가 원문과 승인된 근거를 검토한 뒤에만 symptom ontology/question/safety rule로 진행; 그 이후 data contract, deterministic baseline, simulation, ML 검토, UI 연결
 
 전체 단계와 이후 계획은 [ROADMAP.md](ROADMAP.md)에 있습니다. 계획에는 합의되지 않은 목표 날짜를 넣지 않았습니다.
 

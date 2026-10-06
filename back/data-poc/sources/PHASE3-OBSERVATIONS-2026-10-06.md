@@ -50,6 +50,13 @@ Local live calls using no filter, each official sample filter independently, and
 
 The Python standard-library parser at [`phase3/hira_xml_parser.py`](phase3/hira_xml_parser.py) was applied to all five saved local HIRA XML probes and the separate user-provided XML. It preserved the provenance marker and exact XML item tag names. The five local files each parsed as `resultCode=00`, `totalCount=0`, zero items; the user-provided sample parsed as `totalCount=1` with `divNm`, `fomnTpCdNm`, `gnlNm`, `gnlNmCd`, `injcPthCdNm`, `iqtyTxt`, `meftDivNo`, and `unit`. These parser outputs do not convert the user sample into locally fetched API data or resolve the response discrepancy.
 
+### Exact-text comparison against the existing MFDS snapshot
+
+- The official HIRA ingredient/effect catalog says `gnlNmCd` is available from the HIRA drug-price-list operation response. The HIRA drug-price catalog confirms a separate REST/XML medicine-master service, but the public catalog material inspected here did not expose that operation's request contract.
+- To check whether a direct literal cross-reference was already present in our versioned source data, [`phase3/hira-ingredient-crosscheck.py`](phase3/hira-ingredient-crosscheck.py) compared the single user-provided HIRA sample (`gnlNmCd=100101AGN`, `gnlNm=상황균사체엑스`) with `ITEM_INGR_NAME` in the complete 42,709-row MFDS product-permit snapshot.
+- Of 42,631 non-empty `ITEM_INGR_NAME` rows, zero contained the exact HIRA general-name string and zero contained the exact HIRA code string; zero whole-field matches. The latest machine report is local/ignored at `back/data/reports/phase3/hira-ingredient-crosscheck-2026-10-06-literal-v2.json`.
+- This is only an exact text overlap check between one user-supplied example and one MFDS field. It does not show that no relationship exists, does not validate the HIRA example as a live API response, and does not create a product/ingredient identifier bridge.
+
 ## Safe OTC guide and live response
 
 The supplied DOCX identifies operation `getSafeStadDrugInq`, filters `PRDLST_NM` and `BSSH_NM`, and response fields `PRDLST_NM`, `BSSH_NM`, `VLD_PRD_YMD`, and `STRG_MTH_CONT`. Its sample `totalCount=13` matches the live API's count. The actual raw response also has an extra `BIZRNO` field. No `ITEM_SEQ` was present in the 13 live rows; the response cannot produce an exact `itemSeq` join by itself.
@@ -58,5 +65,6 @@ The supplied DOCX identifies operation `getSafeStadDrugInq`, filters `PRDLST_NM`
 
 - JSON snapshot collection: see [Data PoC README](../README.md); full collection used a 500-row page and 500 ms inter-page delay.
 - Crosswalk reproduction: run `phase3.analysis.ts` with the e약은요 and three Phase 3 snapshot directories; it rejects incomplete pages and mismatched `totalCount` before reporting joins.
+- HIRA literal comparison reproduction: run `phase3/hira-ingredient-crosscheck.py` with the tracked product-permit snapshot and the separately marked user-provided HIRA sample directory; it makes no API call and writes only a generated report.
 - The API daily quota shown by official catalog pages is 10,000 requests per development key; the two full snapshots used 137 page requests, plus bounded probes. Per-request quota accounting should still be checked in the portal.
-- Remaining: determine the exact HIRA drug-price-list operation and access; resolve the local HIRA zero-row discrepancy; capture nonempty HIRA XML; verify whether DUR is approved and locate its base URL; investigate official meaning/use of e약은요 `bizrno`, duplicate-image intent, and image rights; then update exact coverage and source contract.
+- Remaining: determine the exact HIRA drug-price-list operation and request contract; resolve the local HIRA zero-row discrepancy; capture nonempty HIRA XML; verify whether the user's DUR service key is approved and locate the confirmed base URL; investigate official meaning/use of e약은요 `bizrno`, duplicate-image intent, and image rights; then update exact coverage and source contract.
