@@ -1,0 +1,14 @@
+{
+  "source": "product-permit",
+  "method": "GET",
+  "endpoint": "https://apis.data.go.kr/1471000/DrugPrdtPrmsnInfoService08/getDrugPrdtPrmsnInq08",
+  "apiKeyParameterName": "serviceKey",
+  "requestedAt": "2026-10-06T06:43:20.203Z",
+  "pageNo": 1,
+  "numOfRows": 10,
+  "responseFormat": "json",
+  "httpStatus": 200,
+  "contentType": "application/json;charset=utf-8",
+  "byteLength": 6587,
+  "rawFile": "page-000001.json"
+}

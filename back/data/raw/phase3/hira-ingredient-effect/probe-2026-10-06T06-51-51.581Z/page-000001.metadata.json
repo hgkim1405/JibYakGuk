@@ -1,0 +1,17 @@
+{
+  "source": "hira-ingredient-effect",
+  "method": "GET",
+  "endpoint": "https://apis.data.go.kr/B551182/msupCmpnMeftInfoService/getMajorCmpnNmCdList",
+  "apiKeyParameterName": "ServiceKey",
+  "requestedAt": "2026-10-06T06:51:51.582Z",
+  "pageNo": 1,
+  "numOfRows": 10,
+  "queryParameterNames": [
+    "meftDivNo"
+  ],
+  "responseFormat": "xml",
+  "httpStatus": 200,
+  "contentType": "application/xml",
+  "byteLength": 248,
+  "rawFile": "page-000001.xml"
+}

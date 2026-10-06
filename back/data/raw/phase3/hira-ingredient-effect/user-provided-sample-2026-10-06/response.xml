@@ -1,0 +1,23 @@
+<response>
+<header>
+<resultCode>00</resultCode>
+<resultMsg>NORMAL SERVICE.</resultMsg>
+</header>
+<body>
+<items>
+<item>
+<divNm>항악성종양제</divNm>
+<fomnTpCdNm>과립제,세립</fomnTpCdNm>
+<gnlNm>상황균사체엑스</gnlNm>
+<gnlNmCd>100101AGN</gnlNmCd>
+<injcPthCdNm>내복</injcPthCdNm>
+<iqtyTxt>1.1</iqtyTxt>
+<meftDivNo>421</meftDivNo>
+<unit>g</unit>
+</item>
+</items>
+<numOfRows>10</numOfRows>
+<pageNo>1</pageNo>
+<totalCount>1</totalCount>
+</body>
+</response>

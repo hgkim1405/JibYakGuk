@@ -1,54 +1,73 @@
 # 집약국 작업 인수인계
 
-- 작성일: 2026-10-02 (Asia/Seoul)
-- 이어서 할 단계: **Phase 2 — e약은요 API 요청·원문 응답·coverage 검증**
-- 저장소 기준점: `main` / `71ec479 (init)` (`origin/main`과 동일)
+- [전체 남은 작업 체크리스트](TODO-ALL.md)
+- [전체 단계와 완료 기준](ROADMAP.md)
+- [현재 Phase 2 검증 세부표](TODO-PHASE2.md)
+- [Phase 3 공식 API source 사전 조사](../back/data-poc/sources/PHASE3-SOURCE-INVENTORY-2026-10-06.md)
+- [Phase 3 실제 응답·exact identifier JOIN 관찰](../back/data-poc/sources/PHASE3-OBSERVATIONS-2026-10-06.md)
+- [Phase 4 Drug Master v1 산출 기록](../back/data-poc/sources/PHASE4-DRUG-MASTER-2026-10-06.md)
+- [Phase 5 1,000개 표본 검증 기록](../back/data-poc/sources/PHASE5-SAMPLE-VALIDATION-2026-10-06.md)
+- [Phase 6 효능 원문 검토 준비](../back/data-poc/sources/PHASE6-EFFICACY-EVIDENCE-2026-10-06.md)
+- [버전관리 raw snapshot 및 출처/이용 조건](../back/data/raw/README.md)
+- [e약은요 제공기관 미확인 질문 초안](OPEN-PROVIDER-QUESTIONS.md)
+
+- 최초 작성: 2026-10-02 / 마지막 갱신: 2026-10-06 (Asia/Seoul)
+- 현재 단계: **Phase 2 — e약은요 수집·coverage 완료, 이미지 표본은 20/20 DNS 오류라 HTTP 접근성 미측정, 권리/필드 의미 확인 잔여; Phase 3 — 제품허가·낱알식별 전체 수집과 exact JOIN 완료, HIRA/DUR 잔여; Phase 4 — Drug Master v1 생성; Phase 5 — 1,000개 표본 및 same-source 재생성 비교 완료, 날짜 간 delta 잔여; Phase 6 — 효능 원문 worklist 생성, 사람 검토/안전 질문 미착수**
+- 저장소: `main`, 작업 시작 commit `12b183c`
+- Git 인수인계 대상: 현재 구현·인수인계 문서와 2026-10-06 raw snapshots. generated normalized/report는 snapshot에서 로컬 재생성합니다.
 
 ## 현재 상태
 
-Phase 1 프로젝트 골격이 있습니다. 인수인계 문서 작성 직전 `git status`는 깨끗했습니다. 인수인계 폴더와 루트 README 링크는 아직 새 변경 사항입니다.
+Phase 1의 Frontend/NestJS/Python 앱 골격은 유지되고 있습니다. 2026-10-06에 e약은요 API 4,757행, 제품허가 42,709행/86페이지, 낱알식별 25,437행/51페이지, 안전상비약 13행을 실제 호출해 raw로 보존했습니다. e약은요 고유 `itemSeq` 4,740개 모두 제품허가와 exact match했고, 낱알식별과는 2,751개 exact match (58.0%)입니다. 전체 API 교차 분석, [Phase 4 Drug Master v1](../back/data-poc/sources/PHASE4-DRUG-MASTER-2026-10-06.md), [Phase 5 표본 검증](../back/data-poc/sources/PHASE5-SAMPLE-VALIDATION-2026-10-06.md), 전체 remaining은 각 기록을 참고하세요.
 
-**집에서 Git으로 이어 보려면 이 변경 사항을 먼저 사용자의 Git 절차에 따라 동기화해야 합니다.** 인수인계 문서는 아직 commit/push하지 않았습니다.
+- `front/`: Vue 3 + TypeScript + Vite 7 앱 셸과 자리표시자 화면
+- `back/node/`: NestJS 11 orchestration API 골격
+- `back/python/`: FastAPI/Pydantic 앱 골격; ranking/question은 미구현
+- `back/data-poc/sources/easy-drug/`: 실제 응답 기반 TypeScript client, collector, types, validator, normalizer, coverage, analyzer
+- `back/data-poc/sources/phase4/drug-master.ts`: full snapshot 검증, exact ID 연결, source row provenance를 가진 Drug Master v1 생성기
+- `back/data-poc/sources/phase3/hira_xml_parser.py`: HIRA XML raw 응답 및 별도 provenance의 user sample을 원문 필드명 유지해 파싱
+- `back/data/raw/easy-drug/snapshot-2026-10-06T05-52-37.917Z/`: 48페이지 raw, key 없는 page metadata 및 aggregate `snapshot-manifest.json`
+- `back/data/normalized/easy-drug/`와 `back/data/reports/easy-drug/`: 생성 데이터와 분석 JSON
+- `back/data/normalized/drug-master/drug-master-v1-2026-10-06T07-06-28.503Z.json`: 현재 42,709개 Drug Master v1 (77,865,906 bytes, Git 제외); 재생성/검증은 [Phase 4 관찰](../back/data-poc/sources/PHASE4-DRUG-MASTER-2026-10-06.md)
+- raw API snapshot은 다른 PC에서 재수집하지 않고 이어갈 수 있도록 Git으로 버전관리합니다. `.env`, normalized 파일, report는 계속 Git에서 제외하며 snapshot에서 다시 생성합니다. 출처별 이용 조건과 이미지 권리 범위는 [`back/data/raw/README.md`](../back/data/raw/README.md)를 참조하세요.
 
-- `front/`: Vue 3 + TypeScript + Vite 7, Router, Pinia, Axios, PrimeVue 4/Aura 앱 셸과 화면 자리표시자
-- `back/node/`: NestJS 11 `GET /health`, Firebase Admin 지연 초기화 골격, Python 호출 client와 ranking 응답 형태 검증
-- `back/python/`: FastAPI/Pydantic 앱, `GET /health`; ranking 및 question API 계약은 아직 미구현이라 HTTP 501 반환
-- `back/data-poc/collectors/easy_drug_client.py`: 요청 파라미터를 호출자가 주입하면 response body bytes를 그대로 돌려주는 전송 골격
-- `back/data/raw/`, `back/data/normalized/`, `back/data/reports/`: 빈 디렉터리만 있습니다. raw와 생성 데이터는 `.gitignore`에 의해 Git에서 제외됩니다.
-- 각 영역의 `.env.example`, README, package lock이 있습니다. Node 의존성은 `npm ci`로 복원하고, Python 가상환경은 각 작업 머신에서 다시 만들면 됩니다.
+## Phase 2에서 확인된 결과
 
-## 확인된 개발 및 검증 상태
+- API 문서 기준 `GET` endpoint / `ServiceKey` / `pageNo` / `numOfRows` / `type=json`을 실제 요청으로 확인
+- HTTP `200`, content type `application/json;charset=utf-8`, `resultCode=00`
+- 100행/page, 48페이지에서 `totalCount=downloadedRows=4,757`
+- `itemSeq` 4,740 unique, 14개 중복 group의 초과 행 17건. 중복 group은 `itemImage`만 달라 의도 여부 확인이 남음
+- 공식 e약은요 상세 페이지 response element 표에는 `itemImage`가 있고 `bizrno`는 없습니다. product permit와 4,757행 모두에서 `bizrno === BIZRNO`였지만 e약은요 공식 정의/사용범위가 미확인이라 normalized item에서는 계속 제외
+- Coverage: 효능 99.8%, 용법 99.9%, 경고 24.2%, 상호작용 69.4%, 부작용 95.1%, image URL 값 58.2%
+- 2,767개 이미지 값은 모두 같은 공식 호스트의 HTTP(S) URL입니다. 표본 20건을 요청했으나 로컬 DNS `ENOTFOUND`로 끝나 URL이 깨졌는지는 확인하지 못했습니다. 낱알식별 JOIN은 Phase 3 항목입니다.
 
-- 개발 환경에서 Node `22.14.0`, npm `10.9.2`, Python `3.11.9`를 확인했습니다.
-- Frontend와 NestJS TypeScript typecheck, Python `compileall`, `pip check`가 통과했습니다.
-- Vite 페이지/진입 모듈과 NestJS/Python `/health`가 HTTP 200을 반환했습니다.
-- Python `POST /ranking/predict`는 데이터가 없을 때 HTTP 501을 반환했습니다. 추천 결과나 안전 판단 기능은 없습니다.
-- 공식 e약은요 endpoint에 실제 요청하지 않았고, API 승인·서비스 키·응답 schema·quota·license/terms도 확인하지 않았습니다.
-- 테스트, production build, Firebase 연결 및 배포는 수행하지 않았습니다. 별도 지시 없이 `npm run build`나 `nest build`를 실행하지 마세요.
+2026-10-06에 [공식 API 상세](https://www.data.go.kr/data/15075057/openapi.do)에서 무료, 개발 quota 10,000/day, 이용허락범위 제한 없음을 확인했습니다. [포털 이용정책](https://www.data.go.kr/ugs/selectPortalPolicyView.do)은 제3자 권리 저작물에 별도 허락이 필요하다고 명시합니다. 성공 응답은 탐색 3회와 전체 snapshot 48회, 총 51건입니다. 응답을 받지 못한 연결 시도 1회가 quota에 집계됐는지는 확인하지 못했습니다. 이미지 자체의 재사용 권리는 이 API 페이지로 확정하지 않았습니다.
 
-## 이어받을 때 기억할 원칙
+각 Phase 3 live 요청에서 `back/node/.env`의 service-key 설정을 사용했습니다. 변수 설정은 boolean으로만 확인했고 key 값은 읽거나 출력하지 않았습니다. `.env`는 Git에서 제외됩니다. 제품허가·낱알식별 `numOfRows=1000` error 응답은 실제 `resultCode=11`, maximum 500이었고 raw로 남겼습니다. HIRA 로컬 요청은 문서 sample 필터를 포함해 HTTP 200/`resultCode=00`/`totalCount=0`이었으며, 사용자가 제공한 totalCount=1 XML과 일치하지 않아 양쪽을 provenance 구분해 기록했습니다.
 
-1. 실제 API `REQUEST + RAW RESPONSE + ANALYSIS`를 보기 전에는 필드와 response schema를 확정하지 않습니다.
-2. 원문은 보존하고 normalized 결과와 분리합니다. 출처와 수집 시점을 추적할 수 있어야 합니다.
-3. 공식 데이터가 Source of Truth입니다. mock 제품, 임의 safety/DUR 규칙, 가짜 학습 데이터, 임의 추천은 만들지 않습니다.
-4. Safety/DUR hard filter는 NestJS 책임이고, Python ranking은 향후 검증된 안전 후보 사이의 순서만 정합니다.
-5. API 키와 개인 건강정보를 Git, README, 로그, manifest에 넣지 않습니다. raw 응답과 파생 데이터는 현재 Git ignore 상태입니다. API 이용 조건과 공유 허용 범위를 확인한 뒤 이동/공유 방식을 정합니다.
-6. 공식 질문 은행이 검토되기 전에는 Python이 질문을 만들어 사용자에게 제공하지 않습니다.
+## 집 PC에서 이어서 하기
 
-## 병행 작업 제안
+1. `main`에서 push된 commit을 checkout/pull합니다. 이 commit에는 코드·문서와 현재 검증에 사용한 raw API snapshots가 함께 있으므로 기존 snapshot을 다시 수집할 필요가 없습니다.
+2. `back/node/`에서 기존 `package-lock.json`에 따라 `npm ci`를 한 번 실행합니다. 이는 로컬 변환기를 준비하며 공식 API를 호출하지 않습니다.
+3. [Data PoC README](../back/data-poc/README.md)의 Phase 4 명령으로 raw snapshot에서 Drug Master를 재생성한 뒤 Phase 6 명령으로 efficacy worklist를 생성합니다. 생성 결과와 입력 디렉터리는 명령 출력에서 확인합니다.
+4. API를 새로 조사하거나 최신 snapshot이 필요한 작업에 한해서만 로컬 `.env`의 `DATA_GO_KR_SERVICE_KEY`를 사용합니다. 키를 Git, 문서, 로그, 채팅에 복사하지 않습니다.
+5. 다음 미완료 사항을 처리하고 날짜별 이력은 [`daily/`](daily/README.md)에 새 날짜 파일로 남깁니다.
 
-- 집에서 먼저 할 일: 아래 Phase 2 체크리스트의 공식 API 승인·요청 조건 확인과, 허용되는 경우 최소 1회 요청에 필요한 자격 증명 준비
-- 저장소 작업: 정확한 query/auth parameter를 공식 문서로 확인한 후 collector 호출부와 비밀값을 제거한 수집 manifest를 구현
-- 두 작업이 만날 지점: 실제 요청 예시(키를 제거한 요청 메타데이터)와 원문 응답 샘플/사용 허용 조건을 기준으로 파서와 coverage 코드를 설계
+HIRA live probe는 로컬 `.env` key로 `numOfRows=10`, `pageNo=1`과 no-filter/공식 example/full example filters를 각각 요청했습니다. 모두 HTTP 200 및 `resultCode=00`이지만 `totalCount=0`입니다. 사용자가 제공한 totalCount=1 XML은 별도 user-provided raw로 보존했고 local replay와 다르다는 점을 기록했습니다. 이유는 아직 알 수 없습니다.
 
-현재 collector에는 API parameter 이름이나 API key 설정이 없습니다. 이 사실을 유지한 채 실제 문서와 응답을 받은 다음 구현하세요. 집과 다른 작업 머신에서 raw 응답을 Git으로 자동 공유하지 마세요. 저장소의 `.gitignore`가 해당 파일을 의도적으로 제외합니다.
+## 다음 작업 순서
 
-## 실행 위치
+1. DNS가 되는 환경에서 [이미지 URL 표본 실행기](../back/data-poc/sources/easy-drug/image-url-audit.ts)를 다시 실행해 HTTP status/content type을 분류; 현재 report의 `ENOTFOUND` 20건은 URL별 HTTP 결과가 아님
+2. HIRA 약가목록 API의 공식 operation/request contract를 확인해 `gnlNmCd` source를 조사하고, HIRA example/user XML과 local `totalCount=0` 차이를 재현
+3. DUR base URL과 승인 상태를 사용자 제공 승인화면/official Swagger에서 확인하고, source-specific raw response 수집
+4. 제공기관 공식 문서/답변으로 `bizrno` 의미 및 사용범위, e약은요 duplicate `itemSeq`의 multiple-image 관계, linked image rights 확인
+5. 나머지 source/identifier 확인 뒤 Drug Master, Safety Engine, Python baseline, simulation, ML/Deep Learning 검토 및 UI 연결
 
-- Frontend: `front/`에서 `npm ci`, `npm run dev`
-- NestJS: `back/node/`에서 `npm ci`, `npm run start:dev`
-- Python: `back/python/`에서 Python 3.11 가상환경 생성, `python -m pip install -e .`, `.env.example`을 `.env`로 복사한 뒤 `python -m uvicorn app.main:app --reload`
+전체 단계와 이후 계획은 [ROADMAP.md](ROADMAP.md)에 있습니다. 계획에는 합의되지 않은 목표 날짜를 넣지 않았습니다.
 
-이전 검증에서 NestJS는 `PORT=34127`로 띄웠습니다. 그 시점에 `localhost:3000/health`는 404 응답이어서 3000번 포트의 실제 응답 주체는 확인하지 않았습니다. 새 환경에서 사용할 포트와 `/health` 응답을 먼저 확인하세요. 이전 개발 서버 프로세스는 검증 후 종료했습니다.
+## Phase 1 검증 기록
 
-Phase 2의 전체 미완료 항목은 [TODO-PHASE2.md](TODO-PHASE2.md)에 있습니다. 이후 단계의 순서와 진입 조건은 [ROADMAP.md](ROADMAP.md)에 정리했습니다. 날짜별 작업 기록의 작성 규칙과 날짜 인덱스는 [daily/README.md](daily/README.md), 현재 날짜 기록은 [2026-10-02.md](daily/2026-10-02.md)입니다.
+- 개발 환경: Node `22.14.0`, npm `10.9.2`, Python `3.11.9`
+- 과거 확인: Frontend/NestJS typecheck, Python `compileall`/`pip check`, Vite와 backend health smoke check
+- 이번 작업: e약은요 TypeScript 파일 대상 `tsc --noEmit` 통과
+- 자동화 테스트, production build, Firebase 연결, 배포, 추천/안전 판단은 이번 작업에서 수행하지 않았습니다.

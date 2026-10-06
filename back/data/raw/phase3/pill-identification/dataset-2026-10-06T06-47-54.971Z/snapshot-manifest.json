@@ -1,0 +1,11 @@
+{
+  "source": "pill-identification",
+  "endpoint": "https://apis.data.go.kr/1471000/MdcinGrnIdntfcInfoService03/getMdcinGrnIdntfcInfoList03",
+  "responseFormat": "json",
+  "pageSize": 500,
+  "totalCount": 25437,
+  "pagesDownloaded": 51,
+  "downloadedRows": 25437,
+  "complete": true,
+  "capturedAt": "2026-10-06T06:48:53.746Z"
+}

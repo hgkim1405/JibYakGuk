@@ -1,0 +1,93 @@
+{
+  "source": "easy-drug",
+  "method": "GET",
+  "endpoint": "https://apis.data.go.kr/1471000/DrbEasyDrugInfoService/getDrbEasyDrugList",
+  "authenticationParameterName": "ServiceKey",
+  "credentialValueStored": false,
+  "requestParameterNames": [
+    "ServiceKey",
+    "pageNo",
+    "numOfRows",
+    "type"
+  ],
+  "requestParameters": {
+    "pageNos": [
+      1,
+      48
+    ],
+    "numOfRows": [
+      100
+    ],
+    "type": "json"
+  },
+  "requestedAtRange": {
+    "first": "2026-10-06T05:52:37.922Z",
+    "last": "2026-10-06T05:53:53.781Z"
+  },
+  "pagesDownloaded": 48,
+  "expectedPages": 48,
+  "httpStatuses": [
+    200
+  ],
+  "contentTypes": [
+    "application/json;charset=utf-8"
+  ],
+  "resultCodes": [
+    "00"
+  ],
+  "totalCountValues": [
+    4757
+  ],
+  "downloadedRows": 4757,
+  "rawFiles": [
+    "page-000001.json",
+    "page-000002.json",
+    "page-000003.json",
+    "page-000004.json",
+    "page-000005.json",
+    "page-000006.json",
+    "page-000007.json",
+    "page-000008.json",
+    "page-000009.json",
+    "page-000010.json",
+    "page-000011.json",
+    "page-000012.json",
+    "page-000013.json",
+    "page-000014.json",
+    "page-000015.json",
+    "page-000016.json",
+    "page-000017.json",
+    "page-000018.json",
+    "page-000019.json",
+    "page-000020.json",
+    "page-000021.json",
+    "page-000022.json",
+    "page-000023.json",
+    "page-000024.json",
+    "page-000025.json",
+    "page-000026.json",
+    "page-000027.json",
+    "page-000028.json",
+    "page-000029.json",
+    "page-000030.json",
+    "page-000031.json",
+    "page-000032.json",
+    "page-000033.json",
+    "page-000034.json",
+    "page-000035.json",
+    "page-000036.json",
+    "page-000037.json",
+    "page-000038.json",
+    "page-000039.json",
+    "page-000040.json",
+    "page-000041.json",
+    "page-000042.json",
+    "page-000043.json",
+    "page-000044.json",
+    "page-000045.json",
+    "page-000046.json",
+    "page-000047.json",
+    "page-000048.json"
+  ],
+  "complete": true
+}

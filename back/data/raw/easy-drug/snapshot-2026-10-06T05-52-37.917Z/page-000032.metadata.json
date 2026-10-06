@@ -1,0 +1,10 @@
+{
+  "source": "easy-drug",
+  "requestedAt": "2026-10-06T05:53:28.229Z",
+  "pageNo": 32,
+  "numOfRows": 100,
+  "type": "json",
+  "httpStatus": 200,
+  "contentType": "application/json;charset=utf-8",
+  "rawFile": "page-000032.json"
+}

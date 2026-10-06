@@ -5,7 +5,7 @@
 - 일정: 별도 합의 전까지 시작일/목표일은 미정
 - 상태와 날짜 이력: [`daily/`](daily/README.md)의 `YYYY-MM-DD.md` 작업 기록에서 관리
 
-이 문서는 Phase 2 이후만이 아니라 프로젝트 전체의 단계, 선행 조건, 완료 기준을 한 곳에 모읍니다. 개별 날짜의 실제 체크와 결과는 날짜별 기록에 남기고, 이 파일의 단계 완료 체크는 완료 근거가 검토된 뒤에만 갱신합니다.
+이 문서는 프로젝트 전체의 단계, 선행 조건, 완료 기준을 설명합니다. 지금 남은 실행 항목은 [`TODO-ALL.md`](TODO-ALL.md)에 단계별 체크리스트로 모읍니다. 개별 날짜의 실제 작업과 결과는 날짜별 기록에 남기고, 단계 완료 체크는 근거가 검토된 뒤에만 갱신합니다.
 
 ## 제품 및 시스템 흐름
 
@@ -44,53 +44,63 @@ NestJS는 브라우저 REST API, 공식 API, Firestore, safety 처리와 Python 
 
 ### Phase 2 — e약은요 API Data PoC
 
-- 상태: [ ] 미착수
-- 계획 시작일/목표일: 미정
+- 상태: [ ] 진행 중 (e약은요 전체 응답·raw·정규화·coverage 확보. product permit `ITEM_SEQ`와 4,740/4,740 unique ID exact join 및 `bizrno`-`BIZRNO` 4,757/4,757 값 일치 확인; 이미지 접근성/권리와 `bizrno` 공식 정의·사용 범위 및 duplicate 의미는 미확인)
+- 실제 착수일: 2026-10-06 / 완료 목표일: 미정
 - 세부 날짜 체크리스트: [`TODO-PHASE2.md`](TODO-PHASE2.md)
-- 계획: 승인·quota·이용 조건과 최신 operation 계약 확인 → 최소 실제 요청 → 비밀값을 제거한 request manifest 및 허용된 raw response 보존 → 실제 response 분석 → pagination/coverage 검증
+- 실제 진행: 제공된 2026-10-06 API 명세와 실제 API 응답 확인 → 4,757행/48페이지 수집 → raw response 보존 → 실제 response 기준 type/validator/normalizer/coverage 구현 → Phase 3 product-permit와 exact identifier/BIZRNO cross-source comparison
+- 잔여 계획: 재현 가능한 20-URL sample의 HTTP 접근성 확인 및 이미지 권리 근거 조사 → 제공기관 근거로 `bizrno` 공식 정의/사용범위와 중복 `itemSeq` 관계 조사. 검증된 raw snapshots는 Git으로 공유하고 generated normalized/report는 원문에서 로컬 재생성; 새 날짜 delta를 위해 새 snapshot이 필요할 때만 재수집
 - 완료 기준: 요청, raw, 분석이 함께 있고 total/downloaded/unique/duplicate, 효능·용법·경고·상호작용·부작용·이미지 coverage와 update date range를 실제 데이터 근거로 보고
 - 게이트: API key와 API field 이름/형식을 추측하지 않습니다. 실제 응답과 이용 조건이 확보되지 않으면 수집·정규화 구현을 확정하지 않습니다.
 
 ### Phase 3 — 공식 데이터 source 확장과 JOIN PoC
 
-- 상태: [ ] 미착수
+- 상태: [ ] 제품허가/낱알식별 전체 snapshot, 안전상비약 raw, exact ID JOIN report 확보 완료. HIRA non-empty response와 DUR source 확인은 미완료
 - 계획 시작일/목표일: 미정
-- [ ] 의약품 제품 허가정보 API 승인, 최신 operation, 실제 요청/응답, coverage 확인
+- source 목록/확인 경계: [`PHASE3-SOURCE-INVENTORY-2026-10-06.md`](../back/data-poc/sources/PHASE3-SOURCE-INVENTORY-2026-10-06.md)
+- [x] 알려진 4개 source의 raw-only 단건 요청, source-specific query allowlist, JSON 전체 페이지 수집 및 pagination 검증 준비
+- [ ] 사용자 제공 승인 화면/공식 Swagger에서 DUR service base URL과 최신 operation 경로 확인
+- [x] 의약품 제품 허가정보 API 승인 상태를 live request로 확인, 42,709 rows/86 pages full raw response 및 e약은요 exact ID coverage 확인
 - [ ] DUR API 승인, 최신 operation, 실제 요청/응답, coverage 확인
-- [ ] 안전상비의약품 API 실제 요청/응답과 식별자 관계 확인
-- [ ] 낱알식별 API 실제 요청/응답과 제품 연결 근거 확인
-- [ ] HIRA 의약품성분약효정보 API 실제 요청/응답과 일반명 코드 관계 확인
-- [ ] source별 identifier 교차표, collision/누락/중복 및 JOIN률 리포트 작성
+- [x] 안전상비의약품 API 실제 13행 요청/응답과 식별자 필드 부재 확인
+- [x] 낱알식별 API 25,437 rows/51 pages full raw response; exact `ITEM_SEQ` match 2,751/4,740 unique e약은요 IDs 확인
+- [ ] HIRA API: 공급된 HWP guide, XML example을 대조하고 단건 요청했으나 locally fetched sample filters 모두 totalCount=0. 원문 XML parser 및 user-sample parse는 구현. non-empty API response 및 general-name-code bridge 미완료; 별도 HIRA drug-price API operation 확인 필요
+- [x] e약은요/product permit/pill/safe OTC identifier crosswalk, duplicate/missing counts 및 exact JOIN율 report 생성; safe-OTC의 identifier 부재와 HIRA empty-response 한계를 기록
 - 완료 기준: 실제 source response와 identifier 의미가 확인되고, JOIN 결과 및 미연결 이유를 정량화
 - 게이트: 제품명 fuzzy matching으로 JOIN 성공률을 부풀리지 않습니다. 문서의 field명과 실제 응답이 다르면 차이를 기록합니다.
 
 ### Phase 4 — Drug Master v1
 
-- 상태: [ ] 미착수
-- 계획 시작일/목표일: 미정
-- [ ] 검증된 source 필드와 nullable/missing 규칙 확정
-- [ ] 내부 `drug_id` 및 확인된 외부 identifier 관계 설계
-- [ ] raw source와 normalized 값의 provenance, source version/date 보존
-- [ ] 정규화 validator 및 identifier collision 보고서 준비
-- [ ] 실제 source 예시로 Drug Master 생성 결과 검토
+- 상태: [ ] 진행 중 — 42,709개 product-permit ID를 기준으로 exact-join Drug Master v1을 생성·점검; Firestore schema 검토 전 단계
+- 계획 시작일/목표일: 2026-10-06 / 완료 목표일 미정
+- [x] 실제 snapshot에서 v1에 사용한 fields와 nullable/empty handling을 확인
+- [x] `mfds-item-seq:<ITEM_SEQ>` namespaced internal `drug_id` 및 외부 ID mapping 정의
+- [x] source-specific attributes, snapshot version/date 및 page/row-level source references 보존
+- [x] manifest/page completeness, row counts, unique master IDs, field types와 exact JOIN counts 검증
+- [x] 전체 실제 snapshot에서 Drug Master v1 생성 및 summary 검토
 - 완료 기준: source별 사실과 파생/검토 값을 구별하며, 필드와 JOIN 경로를 원문까지 추적 가능
+- 결과: [`PHASE4-DRUG-MASTER-2026-10-06.md`](../back/data-poc/sources/PHASE4-DRUG-MASTER-2026-10-06.md); Firestore collection/schema, canonical display precedence, HIRA/DUR/safe-OTC join은 아직 확정하지 않음
 - 게이트: Firestore collection/schema는 데이터 확인과 Drug Master 논의 이후 확정합니다.
 
 ### Phase 5 — 실제 제품 end-to-end 데이터 검증
 
-- 상태: [ ] 미착수
-- 계획 시작일/목표일: 미정
-- [ ] 허용 범위 안에서 실제 제품 100~1000개 수집/정규화/JOIN
-- [ ] 중복, 누락, identifier collision, 예상하지 못한 값과 source 간 불일치 분석
+- 상태: [ ] 진행 중 — 전체 snapshots와 Drug Master로 1,000개 systematic sample coverage/source comparison 생성. snapshot delta는 아직 없음
+- 계획 시작일/목표일: 2026-10-06 / 완료 목표일 미정
+- [x] 실제 complete snapshots → Drug Master → 1,000개 재현 sample end-to-end 실행
+- [x] 중복/누락/identifier uniqueness 및 표본 source-name 차이 분석; exact source values 유지
+- [x] 두 Drug Master의 exact ID 및 source 속성 snapshot 비교기 구현; 동일 원천 snapshot의 재생성 비교에서 변경 0건
 - [ ] snapshot 간 변경/coverage 차이 리포트
-- [ ] 실패 건과 수동 검토가 필요한 건 추적
+- [x] 이름 표기 차이 2건을 source references와 함께 review 대상으로 기록; whitespace-removal 진단에서는 둘 다 동등
+- [x] sample selector와 실행 절차/산출물 경로 기록
 - 완료 기준: 대표 제품 집합에 대해 수집부터 Drug Master까지 재현 가능하고 coverage/JOIN 품질을 설명
+- 결과: [`PHASE5-SAMPLE-VALIDATION-2026-10-06.md`](../back/data-poc/sources/PHASE5-SAMPLE-VALIDATION-2026-10-06.md)
+- 제한: 현재 비교는 같은 날짜의 동일 source snapshots로 생성한 두 master 사이에서만 수행. 다른 시점 complete snapshots가 있어야 실제 delta를 확인 가능
 - 게이트: 실제 수집 건수가 부족하면 수치를 꾸미지 말고 제한 사유를 기록합니다.
 
 ### Phase 6 — Symptom Ontology, Question Bank, Safety Engine
 
-- 상태: [ ] 미착수
+- 상태: [ ] 초기 진행 — 실제 e약은요 효능 원문 4,747건을 제품/source-row provenance에 연결한 검토 대기 worklist 생성. 개념 분류와 임상 검토는 수행하지 않음
 - 계획 시작일/목표일: 미정
+- [x] Drug Master의 실제 e약은요 효능 원문을 변경하지 않고 제품 ID 및 원문 snapshot/page/row 참조를 보존한 검토 대기 worklist 생성
 - [ ] 실제 효능 원문에서 symptom/condition 후보를 source span과 함께 검토
 - [ ] 검토된 symptom ontology와 사용자 표현 mapping 기준 작성
 - [ ] Question Bank에 question id/concept/text/answer type/possible answers/safety required/source/review status 기록
@@ -98,6 +108,7 @@ NestJS는 브라우저 REST API, 공식 API, Firestore, safety 처리와 Python 
 - [ ] NestJS에서 공식 주의사항, 상호작용, DUR, 연령·임부 조건 등 hard filter 설계
 - [ ] 질문 종료 조건은 simulation을 통해 정할 수 있도록 지표와 실험안을 준비
 - 완료 기준: 안전 관련 질문과 규칙은 source trace 및 필요한 human review를 갖추고 ranking 전에 적용
+- 결과/제한: [`PHASE6-EFFICACY-EVIDENCE-2026-10-06.md`](../back/data-poc/sources/PHASE6-EFFICACY-EVIDENCE-2026-10-06.md); 4,747개 원문 evidence가 모두 `pending`이며 symptom/safety 의미는 부여하지 않음
 - 게이트: NLP/AI 후보 추출만으로 새 의료 질문이나 안전 규칙을 즉시 운영하지 않습니다.
 
 ### Phase 7 — Python Deterministic Baseline / Similarity / Adaptive Questions

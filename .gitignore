@@ -12,8 +12,6 @@
 **/.mypy_cache/
 **/*.egg-info/
 
-back/data/raw/*
-!back/data/raw/.gitkeep
 back/data/normalized/*
 !back/data/normalized/.gitkeep
 back/data/training/*

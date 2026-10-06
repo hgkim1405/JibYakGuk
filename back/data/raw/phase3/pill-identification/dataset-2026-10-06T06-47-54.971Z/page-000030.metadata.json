@@ -1,0 +1,14 @@
+{
+  "source": "pill-identification",
+  "method": "GET",
+  "endpoint": "https://apis.data.go.kr/1471000/MdcinGrnIdntfcInfoService03/getMdcinGrnIdntfcInfoList03",
+  "apiKeyParameterName": "serviceKey",
+  "requestedAt": "2026-10-06T06:48:28.681Z",
+  "pageNo": 30,
+  "numOfRows": 500,
+  "responseFormat": "json",
+  "httpStatus": 200,
+  "contentType": "application/json;charset=utf-8",
+  "byteLength": 493654,
+  "rawFile": "page-000030.json"
+}

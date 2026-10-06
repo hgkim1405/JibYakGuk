@@ -1,0 +1,11 @@
+{
+  "source": "product-permit",
+  "endpoint": "https://apis.data.go.kr/1471000/DrugPrdtPrmsnInfoService08/getDrugPrdtPrmsnInq08",
+  "responseFormat": "json",
+  "pageSize": 500,
+  "totalCount": 42709,
+  "pagesDownloaded": 86,
+  "downloadedRows": 42709,
+  "complete": true,
+  "capturedAt": "2026-10-06T06:47:46.215Z"
+}
